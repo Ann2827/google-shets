@@ -11,6 +11,9 @@
 <button id="authorize_button" style="display: none;">Authorize</button>
 <button id="signout_button" style="display: none;">Sign Out</button>
 
+<button id="write_button">Write</button>
+<button id="update_button">Update</button>
+
 <pre id="content" style="white-space: pre-wrap;"></pre>
 
 <script type="text/javascript">
@@ -27,6 +30,8 @@
 
     var authorizeButton = document.getElementById('authorize_button');
     var signoutButton = document.getElementById('signout_button');
+    var writeButton = document.getElementById('write_button');
+    var updateButton = document.getElementById('update_button');
 
     /**
      *  On load, called to load the auth2 library and API client library.
@@ -53,9 +58,52 @@
             updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
             authorizeButton.onclick = handleAuthClick;
             signoutButton.onclick = handleSignoutClick;
+            writeButton.onclick = writeData;
+            updateButton.onclick = updateData;
         }, function(error) {
             appendPre(JSON.stringify(error, null, 2));
         });
+    }
+
+    function writeData () {
+        var params = {
+            // The ID of the spreadsheet to update.
+            spreadsheetId: '1ilwuSGPueLl75v0d-kUsGjuI3JqyIXeZ8ReFMRlbGic',  // TODO: Update placeholder value.
+
+            // The A1 notation of a range to search for a logical table of data.
+            // Values will be appended after the last row of the table.
+            range: 'A2:E',  // TODO: Update placeholder value.
+
+            // How the input data should be interpreted.
+            valueInputOption: 'USER_ENTERED',  // TODO: Update placeholder value.
+
+            // How the input data should be inserted.
+            insertDataOption: 'INSERT_ROWS',  // TODO: Update placeholder value.
+        };
+
+        var valueRangeBody = {
+            "values": [
+                [
+                    "3",
+                    "3",
+                    "3",
+                    "3",
+                    "3"
+                ]
+            ]
+        };
+
+        var request = gapi.client.sheets.spreadsheets.values.append(params, valueRangeBody);
+        request.then(function(response) {
+            // TODO: Change code below to process the `response` object:
+            console.log(response.result);
+        }, function(reason) {
+            console.error('error: ' + reason.result.error.message);
+        });
+    }
+
+    function updateData () {
+
     }
 
     /**
